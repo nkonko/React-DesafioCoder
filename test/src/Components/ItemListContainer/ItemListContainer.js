@@ -4,20 +4,27 @@ import { products } from "../mock/products.js";
 import ItemList from "../ItemList/ItemList";
 
 const ItemListContainer = () => {
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState(products);
   const [loading, setloading] = useState(true);
 
   useEffect(() => {
     setTimeout(() => {
       const data = new Promise((resolve, reject) => {
-        resolve(products);
+        if (products) {
+          resolve(products);
+        }
+
+        reject("Error aqui");
       });
+
       data.then((data) => {
         setItems(data);
       });
+
       data.catch((err) => {
         console.log(err);
       });
+
       data.finally(() => {
         setloading(false);
       });

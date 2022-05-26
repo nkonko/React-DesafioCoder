@@ -1,37 +1,36 @@
-import React from "react";
-import { useEffect, useState } from "react";
-import { products } from "../mock/products.js";
+import { Container } from "react-bootstrap";
+import React, { useState } from "react";
+
 import ItemList from "../ItemList/ItemList";
+import productServices from "../../mock/productMock";
+import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
 
-const ItemListContainer = () => {
-  const [items, setItems] = useState(products);
-  const [loading, setloading] = useState(true);
+// grilla de productos, por el momento tengo 4 para este demo
+const ItemListContainer = ({ saludo }) => {
+  // intenté con varios modos y sólo useState me permite guardar mis productos posterior al render
+  const [arrayItems, setarrayItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    setTimeout(() => {
-      const data = new Promise((resolve, reject) => {
-        if (products) {
-          resolve(products);
-        }
+  productServices().then((res) => {
+    setarrayItems(res);
+    setIsLoading(false);
+  });
 
-        reject("Error aqui");
-      });
-
-      data.then((data) => {
-        setItems(data);
-      });
-
-      data.catch((err) => {
-        console.log(err);
-      });
-
-      data.finally(() => {
-        setloading(false);
-      });
-    }, 3000);
-  }, []);
-
-  return <>{loading ? <h1>Cargando...</h1> : <ItemList items={items} />}</>;
+  return (
+    <div>
+      <h3>{saludo}</h3>
+      <br />
+      {isLoading ? (
+        <LoadingSpinner></LoadingSpinner>
+      ) : (
+        <Container>
+          <div className="itemContainer">
+            <ItemList items={arrayItems}></ItemList>
+          </div>
+        </Container>
+      )}
+    </div>
+  );
 };
 
 export default ItemListContainer;

@@ -1,19 +1,19 @@
+import Item from "../Item/Item";
 import React from "react";
-import ItemCard from "../ItemCard/ItemCard";
-import "./ItemList.css";
 
 const ItemList = ({ items }) => {
-  console.log(items);
-
-  return (
-    <>
-      <div className="item-list">
-        {items.map((item) => {
-          return <ItemCard key={item.id} item={item} />;
-        })}
-      </div>
-    </>
-  );
+  return items.map((item) => (
+    <Item
+      key={item.id}
+      id={item.id}
+      title={item.title}
+      description={item.description}
+      pictureUrl={item.pictureUrl}
+      price={item.price}
+      stock={item.stock}
+      initial={item.initial}
+    ></Item>
+  ));
 };
 
 export default ItemList;

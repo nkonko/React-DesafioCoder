@@ -8,6 +8,7 @@ import NavBar from "./components/NavBar/NavBar";
 import ItemDetailContainer from "./components/ItemDetailContainer/ItemDetailContainer";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "./components/Header/Header";
+import Cart from "./components/Cart/Cart";
 
 //Views
 import Home from "./views/Home";
@@ -30,10 +31,22 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/detail/:id" element={<ItemDetailContainer />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
       </CartProvider>
     </Router>
+  );
+}
+
+function NotFound() {
+  return (
+    <>
+      {" "}
+      <br></br>
+      <h1>La página no existe</h1>
+    </>
   );
 }
 

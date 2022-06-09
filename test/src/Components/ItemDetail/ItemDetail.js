@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { Card, Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import moment from "moment";
 
 import ItemCount from "../ItemCount/ItemCount";
 
@@ -21,6 +22,8 @@ const ItemDetail = (item) => {
       return;
     }
 
+    let total = item.price * quantity;
+
     if (isInCart(item.id)) {
       const result = items.find((obj) => obj.item.id === item.id);
 
@@ -28,9 +31,27 @@ const ItemDetail = (item) => {
 
       items = removeItem(item.id);
 
-      setItems([{ item: result, quantity: result.quantity }, ...items]);
+      total = result.item.price * result.quantity;
+
+      setItems([
+        {
+          item: result,
+          quantity: result.quantity,
+          date: moment().format("L"),
+          total: total,
+        },
+        ...items,
+      ]);
     } else {
-      setItems([{ item: item, quantity: quantity }, ...items]);
+      setItems([
+        {
+          item: item,
+          quantity: quantity,
+          date: moment().format("L"),
+          total: total,
+        },
+        ...items,
+      ]);
     }
   };
 
@@ -72,18 +93,21 @@ const ItemDetail = (item) => {
               stock={item.items.stock}
               initial={item.items.initial}
             ></ItemCount>
-            <button type="button" onClick={() => addItem(item.items, count)}>
+            <button
+              className="mt-3"
+              type="button"
+              onClick={() => addItem(item.items, count)}
+            >
               Agregar a mi carrito
             </button>
             {items.length > 0 ? (
               <>
-                <br />
-                <button type="button" onClick={HandleClick}>
+                <button className="mt-3" type="button" onClick={HandleClick}>
                   Terminar mi compra
                 </button>
               </>
             ) : (
-              <div></div>
+              <></>
             )}
           </Card.Body>
         </Card>

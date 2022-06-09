@@ -1,33 +1,41 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 
-import ItemDetail from "../ItemDetail/ItemDetail";
 import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
+import ItemList from "../ItemList/ItemList";
 
 //Firebase
 import { db } from "../../Firebase/FirebaseConfig";
 import { collection, getDocs, query, where } from "firebase/firestore";
 
-const ItemDetailContainer = () => {
-  let param = useParams();
-  let prodID = param.id;
-
+const CategorySearch = () => {
+  const param = useParams();
   const [arrayItems, setarrayItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const itemContainer = {
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+  };
+
   useEffect(() => {
     const getItems = async () => {
-      const q = query(collection(db, "Collection"), where("id", "==", prodID));
+      const q = query(
+        collection(db, "Collection"),
+        where("category", "==", param.category)
+      );
       const docs = [];
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc) => {
         docs.push({ ...doc.data(), id: doc.id });
       });
-      setarrayItems(docs[0]);
+      setarrayItems(docs);
       setIsLoading(false);
     };
     getItems();
-  }, [prodID]);
+  }, [param.category]);
 
   return (
     <div>
@@ -35,8 +43,8 @@ const ItemDetailContainer = () => {
         <LoadingSpinner></LoadingSpinner>
       ) : (
         <>
-          <div className="detailContainer">
-            <ItemDetail items={arrayItems}></ItemDetail>
+          <div className="container" style={itemContainer}>
+            <ItemList items={arrayItems}></ItemList>
           </div>
         </>
       )}
@@ -44,4 +52,4 @@ const ItemDetailContainer = () => {
   );
 };
 
-export default ItemDetailContainer;
+export default CategorySearch;
